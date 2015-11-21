@@ -39,7 +39,7 @@ gulp.task('browser-sync', ['sass', 'js', 'jekyll-build'], function() {
 });
 
 /**
-* Compile files from js into both _site/css (for live injecting) and site (for future jekyll builds)
+* Compile files from js into both _site/js (for live injecting) and site (for future jekyll builds)
 */
 gulp.task('js', function () {
   return gulp.src('js/*.js')
@@ -65,7 +65,7 @@ gulp.task('sass', function () {
 });
 
 /**
-* Watch scss files for changes & recompile
+* Watch scss & js files for changes & recompile
 * Watch html/md files, run jekyll & reload BrowserSync
 */
 gulp.task('watch', function () {
