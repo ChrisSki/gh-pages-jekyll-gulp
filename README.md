@@ -23,7 +23,9 @@ keep_files: ["assets", "css", "js"]
 
 ## Usage
 
-```$ gulp```
+```
+$ gulp
+```
 
 On the command line, this runs the default gulp task in gulpfile.js which creates the initial build. After that, `browserSync` handles the rest with live reloading when you modify files. All but the `asset` directory are live reloaded.
 
