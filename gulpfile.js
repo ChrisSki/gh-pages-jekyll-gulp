@@ -35,7 +35,7 @@ gulp.task('browser-sync', ['sass', 'js', 'assets', 'jekyll-build'], function() {
 });
 
 /**
-* Compile files from js into both _site/js (for live injecting) and site (for future jekyll builds)
+* Compile files from js into _site/js (for live injecting)
 */
 gulp.task('js', function () {
   return gulp.src('js/*.js')
@@ -44,7 +44,7 @@ gulp.task('js', function () {
 });
 
 /**
-* Compile files from _sass into both _site/css (for live injecting) and site (for future jekyll builds)
+* Compile files from _sass into _site/css (for live injecting)
 */
 gulp.task('sass', function () {
   return gulp.src('_sass/main.scss')
@@ -59,7 +59,7 @@ gulp.task('sass', function () {
 });
 
 /**
- * Compress images and add them to both folders for rebuild
+ * Compress assets
  */
 gulp.task('assets', function () {
   return gulp.src('assets/**/*')
