@@ -2,7 +2,7 @@
 > Jekyll is great but if you want, or need, to avoid its plugin world (for example you're planning on using Github Pages) you're not left to do things like minify javascript or compress images. This gives you a simple build system as a starting point to go wherever you need to get to.
 
 ### What makes this useful?
-This tool simply `excludes` specific directories from the Jekyll build system. By default:
+This tool uses `exclude` to exclude specific directories from the Jekyll build system. By default:
  - `css`
  - `js`
  - `_sass`
