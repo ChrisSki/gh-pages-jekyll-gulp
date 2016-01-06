@@ -3,10 +3,11 @@
 
 ### What makes this useful?
 This tool uses `exclude` to exclude specific directories from the Jekyll build system. By default:
- - `css`
- - `js`
- - `_sass`
- - `assets`
+
+- `_sass`
+- `css`
+- `js`
+- `assets`
 
 _Jekyll doesn't automatically add `js` and `assets` directories but I'm making the assumption you will
 so I'm adding them to save you a little work_
