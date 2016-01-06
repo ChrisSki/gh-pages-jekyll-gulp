@@ -6,6 +6,7 @@ var cp = require('child_process');
 var htmlMin = require('gulp-minify-html');
 var jsMin = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
+var imagemin = require('gulp-imagemin');
 
 var messages = {
   jekyllBuild: '<span style="color: grey">Running:</span> $ jekyll build'
@@ -30,7 +31,7 @@ gulp.task('jekyll-rebuild', ['jekyll-build'], function () {
 /**
 * Wait for jekyll-build, then launch the Server
 */
-gulp.task('browser-sync', ['sass', 'js', 'jekyll-build'], function() {
+gulp.task('browser-sync', ['sass', 'js', 'images', 'jekyll-build'], function() {
   browserSync({
     server: {
       baseDir: '_site'
@@ -65,7 +66,20 @@ gulp.task('sass', function () {
 });
 
 /**
-* Watch scss & js files for changes & recompile
+ * Compress images and add them to both folders for rebuild
+ */
+gulp.task('images', function () {
+  return gulp.src('images/**/*')
+    .pipe(imagemin({
+      progressive: true,
+      interlaced: true
+    }))
+    .pipe(gulp.dest('_site/images'))
+    .pipe(gulp.dest('images'));
+});
+
+/**
+* Watch scss files for changes & recompile
 * Watch html/md files, run jekyll & reload BrowserSync
 */
 gulp.task('watch', function () {
