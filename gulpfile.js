@@ -3,7 +3,7 @@ var browserSync = require('browser-sync');
 var sass = require('gulp-sass');
 var prefix = require('gulp-autoprefixer');
 var cp = require('child_process');
-var htmlMin = require('gulp-minify-html');
+var htmlMin = require('gulp-htmlmin');
 var jsMin = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var imagemin = require('gulp-imagemin');
@@ -26,7 +26,7 @@ gulp.task('jekyll-rebuild', ['jekyll-build'], function () {
 /**
 * Wait for jekyll-build, then launch the Server
 */
-gulp.task('browser-sync', ['sass', 'js', 'images', 'jekyll-build'], function() {
+gulp.task('browser-sync', ['sass', 'js', 'assets', 'jekyll-build'], function() {
   browserSync({
     server: {
       baseDir: '_site'
@@ -40,8 +40,7 @@ gulp.task('browser-sync', ['sass', 'js', 'images', 'jekyll-build'], function() {
 gulp.task('js', function () {
   return gulp.src('js/*.js')
     .pipe(gulp.dest('_site/js'))
-    .pipe(browserSync.reload({stream: true}))
-    .pipe(gulp.dest('js'));
+    .pipe(browserSync.reload({stream: true}));
 });
 
 /**
@@ -56,21 +55,19 @@ gulp.task('sass', function () {
     .pipe(prefix(['last 15 versions', '> 1%', 'ie 8', 'ie 7'], { cascade: true }))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('_site/css'))
-    .pipe(browserSync.reload({stream:true}))
-    .pipe(gulp.dest('css'));
+    .pipe(browserSync.reload({stream:true}));
 });
 
 /**
  * Compress images and add them to both folders for rebuild
  */
-gulp.task('images', function () {
-  return gulp.src('images/**/*')
+gulp.task('assets', function () {
+  return gulp.src('assets/**/*')
     .pipe(imagemin({
       progressive: true,
       interlaced: true
     }))
-    .pipe(gulp.dest('_site/images'))
-    .pipe(gulp.dest('images'));
+    .pipe(gulp.dest('_site/assets'));
 });
 
 /**

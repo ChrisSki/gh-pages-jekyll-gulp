@@ -19,3 +19,5 @@ github_username:  jekyll
 
 # Build settings
 markdown: kramdown
+exclude: ["assets", "css", "_sass", "js"]
+keep_files: ["assets", "css", "js"]
