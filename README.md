@@ -1,26 +1,8 @@
-## Jekyll with a splash of Gulp.
-> Jekyll is great for static site generation. But if you want, or need, to avoid its plugin world (for example you're planning on using Github Pages) you're not left with many options to do things like minify javascript or compress images. This gives you a simple build system as a starting point to go wherever you need to get to.
+## Jekyll with a splash of Gulp for Github Pages.
+> Jekyll is great for static site generation. But since we're not allowed to use Jekyll plugins, we're not left with many options to do things like minify javascript or compress images if we choose to. This gives you a simple build system as a starting point to go wherever you need to get to.
 
 ### What makes this useful?
-This tool uses `exclude` to exclude specific directories from the Jekyll build system. By default:
-
-- `assets`
-- `js`
-- `css`
-- `_sass`
-
-_Jekyll doesn't automatically add `js` and `assets` directories but I'm making the assumption you will
-so I'm adding them to save you a little work_
-
-This tool also uses `keep_files` to keep Jekyll from wiping out directories in the `_site` directory when
-it rebuilds.
-
-Example of this in the `_config.yml` file:
-
-```
-exclude: ["assets", "js", "css", "_sass"]
-keep_files: ["assets", "js", "css"]
-```
+This tool uses one simple approach to make sure your assets are where they need to be for build time, whether locally, or on your `gh-pages` branch. Jekyll functions as normal and copies the appropriate directories over during a build. The `gulp` watch tasks injects the `css` and `js`, when files are saved, into both their respective `_site` and `root` directories to take advantage of live reloading, as well as make sure the updated code is present when Jekyll rebuilds. This assures that code is in the right place when you're pushing to Github Pages.
 
 ## Usage
 
