@@ -5,6 +5,40 @@ var prefix = require('gulp-autoprefixer');
 var cp = require('child_process');
 var sourcemaps = require('gulp-sourcemaps');
 var imagemin = require('gulp-imagemin');
+var minifyCSS = require('gulp-cssnano');
+var minifyHTML = require("gulp-htmlmin");
+var size = require("gulp-size");
+var sitemap = require("gulp-sitemap");
+var uglify = require("gulp-uglify");
+var gulpif = require("gulp-if");
+var concat = require("gulp-concat");
+var runSequence = require("run-sequence");
+var del = require("del");
+
+
+var env = process.env.JEKYLL_ENV || "DEV";
+env = env.toUpperCase();
+
+var buildVars = {
+  minify: false,
+  sourceMaps: true,
+  url: 'localhost:3000'
+};
+
+switch (env) {
+  case 'PROD':
+    buildVars.minify = true;
+    buildVars.sourceMaps = false;
+    buildVars.url = ''; // Add your production url here
+    break;
+}
+
+/**
+ * Remove dist on a new build to start clean
+ */
+gulp.task('clean', function() {
+  return del(['.jekyll-metadata', '_site']);
+});
 
 /**
 * Build the Jekyll Site
@@ -24,7 +58,7 @@ gulp.task('jekyll-rebuild', ['jekyll-build'], function () {
 /**
 * Wait for jekyll-build, then launch the Server
 */
-gulp.task('browser-sync', ['sass', 'js', 'assets', 'jekyll-build'], function() {
+gulp.task('sync', function() {
   browserSync({
     server: {
       baseDir: '_site'
@@ -33,10 +67,21 @@ gulp.task('browser-sync', ['sass', 'js', 'assets', 'jekyll-build'], function() {
 });
 
 /**
+ * Let's minify our HTML
+ */
+gulp.task('html', function() {
+  return gulp.src('_site/**/*.html')
+    .pipe(minifyHTML({collapseWhitespace: true, removeComments: true, minifyJS: true}))
+    .pipe(size({title: 'HTML size:'}))
+    .pipe(gulp.dest('_site'));
+});
+
+/**
 * Compile files from js into both _site/js (for live injecting) and site (for future jekyll builds)
 */
 gulp.task('js', function () {
   return gulp.src('js/*.js')
+    .pipe(gulpif(buildVars.minify, uglify()))
     .pipe(gulp.dest('_site/js'))
     .pipe(browserSync.reload({stream: true}))
     .pipe(gulp.dest('js'));
@@ -47,12 +92,13 @@ gulp.task('js', function () {
 */
 gulp.task('sass', function () {
   return gulp.src('_sass/main.scss')
-    .pipe(sourcemaps.init())
+    .pipe(gulpif(buildVars.sourceMaps, sourcemaps.init()))
     .pipe(sass({
       onError: browserSync.notify
     }))
     .pipe(prefix(['last 15 versions', '> 1%', 'ie 8', 'ie 7'], { cascade: true }))
-    .pipe(sourcemaps.write())
+    .pipe(gulpif(buildVars.minify, minifyCSS()))
+    .pipe(gulpif(buildVars.sourceMaps, sourcemaps.write()))
     .pipe(gulp.dest('_site/css'))
     .pipe(browserSync.reload({stream:true}))
     .pipe(gulp.dest('css'));
@@ -63,25 +109,36 @@ gulp.task('sass', function () {
  */
 gulp.task('assets', function () {
   return gulp.src('assets/**/*')
-    .pipe(imagemin({
-      progressive: true,
-      interlaced: true
-    }))
+    imagemin.gifsicle({optimizationLevel: 3}),
+    imagemin.optipng({optimizationLevel: 7}),
+    imagemin.jpegtran({progressive: true}),
+    imagemin.svgo()
     .pipe(gulp.dest('assets'));
 });
 
 /**
-* Watch scss files for changes & recompile
-* Watch html/md files, run jekyll & reload BrowserSync
-*/
-gulp.task('watch', function () {
-  gulp.watch('_sass/*.scss', ['sass']);
-  gulp.watch('js/*.js', ['js']);
-  gulp.watch(['*.html', '_includes/*.html', '_layouts/*.html', '_posts/*'], ['jekyll-rebuild']);
+ * Let's build a sitemap for SEO!
+ */
+gulp.task('sitemap', function() {
+  return gulp.src('_site/**/*.html')
+  .pipe(sitemap({
+    siteUrl: buildVars.url
+  }))
+  .pipe(gulp.dest('_site'));
 });
 
 /**
 * Default task, running just `gulp` will compile the sass,
 * compile the jekyll site, launch BrowserSync & watch files.
 */
-gulp.task('default', ['browser-sync', 'watch']);
+gulp.task('build', function() {
+  runSequence('clean', 'jekyll-build', ['sass', 'js', 'assets', 'html'], 'sitemap');
+});
+
+gulp.task('run', function() {
+  runSequence('clean', 'jekyll-build', ['sass', 'js', 'assets'], 'sitemap', 'sync');
+
+  gulp.watch('_sass/*.scss', ['sass']);
+  gulp.watch('js/*.js', ['js']);
+  gulp.watch(['*.html', '_includes/*.html', '_layouts/*.html', '_posts/*'], ['jekyll-rebuild']);
+});
