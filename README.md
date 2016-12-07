@@ -16,6 +16,11 @@ buildVars.url = ''; // Add your production url ex: 'http://mycoolsite.com'
 
 ## Usage
 
+Run first to install Node modules
+```
+npm install
+```
+
 **Development Build**
 
 ```
