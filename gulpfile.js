@@ -96,7 +96,7 @@ gulp.task('sass', function () {
     .pipe(sass({
       onError: browserSync.notify
     }))
-    .pipe(prefix(browsers: ['last 2 versions', 'Explorer >= 10', 'Android >= 4.1', 'Safari >= 7', 'iOS >= 7']))
+    .pipe(prefix({browsers: ['last 2 versions', 'Explorer >= 10', 'Android >= 4.1', 'Safari >= 7', 'iOS >= 7']}))
     .pipe(gulpif(buildVars.minify, minifyCSS()))
     .pipe(gulpif(buildVars.sourceMaps, sourcemaps.write()))
     .pipe(gulp.dest('_site/css'))
