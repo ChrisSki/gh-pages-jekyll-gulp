@@ -11,7 +11,7 @@ There is one mandatory step to get this working from development to production. 
 You **must** add your website url to the `buildVars` variable on line 32 in `gulpfile.js`:
 
 ```
-buildVars.url = ''; // Add your production url
+buildVars.url = ''; // Add your production url ex: 'http://mycoolsite.com'
 ```
 
 ## Usage
