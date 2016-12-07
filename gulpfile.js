@@ -6,17 +6,17 @@ var cp = require('child_process');
 var sourcemaps = require('gulp-sourcemaps');
 var imagemin = require('gulp-imagemin');
 var minifyCSS = require('gulp-cssnano');
-var minifyHTML = require("gulp-htmlmin");
-var size = require("gulp-size");
-var sitemap = require("gulp-sitemap");
-var uglify = require("gulp-uglify");
-var gulpif = require("gulp-if");
-var concat = require("gulp-concat");
-var runSequence = require("run-sequence");
-var del = require("del");
+var minifyHTML = require('gulp-htmlmin');
+var size = require('gulp-size');
+var sitemap = require('gulp-sitemap');
+var uglify = require('gulp-uglify');
+var gulpif = require('gulp-if');
+var concat = require('gulp-concat');
+var runSequence = require('run-sequence');
+var del = require('del');
 
 
-var env = process.env.JEKYLL_ENV || "DEV";
+var env = process.env.JEKYLL_ENV || 'DEV';
 env = env.toUpperCase();
 
 var buildVars = {
@@ -96,7 +96,7 @@ gulp.task('sass', function () {
     .pipe(sass({
       onError: browserSync.notify
     }))
-    .pipe(prefix(['last 15 versions', '> 1%', 'ie 8', 'ie 7'], { cascade: true }))
+    .pipe(prefix(browsers: ['last 2 versions', 'Explorer >= 10', 'Android >= 4.1', 'Safari >= 7', 'iOS >= 7']))
     .pipe(gulpif(buildVars.minify, minifyCSS()))
     .pipe(gulpif(buildVars.sourceMaps, sourcemaps.write()))
     .pipe(gulp.dest('_site/css'))
